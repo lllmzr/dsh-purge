@@ -1,3 +1,19 @@
+# 1.1.72
+
+## 自维护版本 / Maintained fork
+
+- Maintainer: lllmzr. Based on upstream 1.1.71, preserving attribution and MIT license.
+- Target verified against the installed DSH 0.2.1-rc.3 runtime and workspace copies of its host files.
+- Shared HTTP origin/content-type validation; rule mutation requires POST.
+- Correct nested-profile uninstall and owned preset-default reset; source checkout updates cannot discard local work.
+- Correct fd routing, unique atomic-write temporary files, and hash/version-tracked backups. Repeated Apply no longer corrupts the restore baseline.
+- Complete staged package updates with rollback; correct file-archive detection; bounded ZIP extraction with path/symlink/CRC checks.
+- Node requirement corrected to >=22.13.0; explicit object schemas and host tool resolution added for 0.2.1.
+- Legacy subagent restrictions are retained in source and migrated to an independent leaf preset plus monotonic tools.guard enforcement. No restriction-removal migration is used.
+- Local-lab target checks cover DNS results and later tool arguments; public and metadata addresses are rejected for scoped exercise tasks. This application check is not OS-level network isolation.
+- Update source points to lllmzr/dsh-purge. Source-link installs are maintained through Git; automatic Apply/update remain off.
+- Reproducible regression, host-copy Apply/idempotence/restore, and real-runtime smoke verification scripts included.
+
 # 1.1.71
 
 ## 中文

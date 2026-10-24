@@ -1,5 +1,9 @@
 # 镜像说明 / Mirror Notice
 
+> **2026-10-25 更新：本仓库从 1.1.72 起由 lllmzr 自维护，已经包含独立修复。**
+> 下文是 2026-10-13 镜像快照的历史记录；“零改动”“唯一差异”等描述仅适用于当时的快照，不适用于当前 master。
+> 原始 1.1.71 历史、MIT 许可证和作者署名继续保留，当前变更见 README 与 release-notes.md。
+
 本仓库是 **[YuJunZhiXue/dsh-purge](https://github.com/YuJunZhiXue/dsh-purge)** 的**全量镜像（mirror）**，
 由 [@mmparko](https://github.com/mmparko) 在上游宣布删库前完整备份，用于存档与分发。
 

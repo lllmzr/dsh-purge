@@ -32,3 +32,9 @@ default-prompt-inject.md
 /official-harness-payload.7z
 *.asar
 *.asar.bak
+# Local host copies, installation backups and generated packages.
+.local/
+artifacts/
+*.tgz
+audit/results.json
+audit/installed-host.json
