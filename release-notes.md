@@ -1,3 +1,12 @@
+# 1.1.73
+
+- 修复实际发送消息时 `deployment:persona-suffix` 再次生成 `{{cwd}}` 导致 0.2.1 严格渲染失败的问题。
+- 工作目录取自当前 agent 会话（子代理使用自己的目录），输出为不插值的字面文本；缺少目录时不伪造路径，保留必需的宿主上下文和自定义 suffix。
+- 新增组装包装路径的回归，以及使用真实宿主渲染器的 24 场景 / 48 次渲染验证；没有调用真实模型。
+- 离线安装清单读取实际插件版本，避免后续版本仍记录为 1.1.72。
+
+Fix prompt rendering on DSH 0.2.1 when the registry exposes only provider/model variables. Generated directory suffixes now use the current session directory as literal text. Includes regression coverage and actual-host renderer verification.
+
 # 1.1.72
 
 ## 自维护版本 / Maintained fork

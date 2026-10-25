@@ -1,4 +1,4 @@
-# dsh-purge 1.1.72（lllmzr 自维护版）
+# dsh-purge 1.1.73（lllmzr 自维护版）
 
 基于 [YuJunZhiXue/dsh-purge 1.1.71](https://github.com/YuJunZhiXue/dsh-purge/tree/5e757260a0be055892b48ec520d451cc82e1c191) 的独立维护版本。原作者 YuJunZhiXue，原版权 Copyright (c) 2026 小杨；保留 MIT 许可证及第三方声明。当前仓库不再是零改动镜像。
 
@@ -6,6 +6,7 @@
 
 ## 本版修复
 
+- 修复 0.2.1 发送消息时报 `unknown prompt variable "{{cwd}}"`：插件生成的 persona 后缀直接读取当前会话目录并按字面文本处理，保留宿主必需的运行时上下文。
 - 统一 HTTP 来源与 JSON 请求校验，规则写操作只接受 POST。
 - 卸载识别真实的嵌套 profile 结构；停用/卸载时清理本插件占用的默认预设。
 - 修复文件句柄路由、并发原子写与重复 Apply 破坏备份的问题。
@@ -45,6 +46,8 @@ npm test
 ```
 
 只使用 Node 内置模块即可跑回归，不需要运行安装脚本或提供模型密钥。`scripts/verify-host.mjs`、`verify-runtime.mjs`、`smoke-patched.mjs` 需要工作目录中的官方宿主测试副本；副本和本机测试输出不上传 Git。
+
+`node scripts/verify-prompt.mjs --base <@deepseek-ai的绝对路径>` 使用真实宿主渲染器复现旧错误，并验证 24 组场景、48 次渲染，不发送模型请求。
 
 ## 数据与限制
 

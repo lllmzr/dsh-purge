@@ -28,6 +28,41 @@ const { explicitObjectSchemas } = await import('../lib/schema-compat.js');
 const { compatiblePresetDefinitions, leafDenial, apply: applyLeaf } = await import('../lib/redteam/leaf-policy.js');
 const { readPresetDefinition } = await import('../lib/redteam/preset-composition.js');
 const { extractZipBuffer } = await import('../lib/zip-extract.js');
+const { rewritePromptAssembly, installAssembleGuard } = await import('../lib/identity.js');
+
+test('prompt assembly resolves cwd from the active session without a cwd variable', async () => {
+  for (const preset of ['standard', 'build', 'redteam', 'redteam-leaf']) {
+    for (const sections of [[], [{ name: 'deployment:persona-suffix', text: 'Your working directory is {{cwd}}.' }]]) {
+      const context = { agent: { session: { header: { cwd: 'D:/fixture/{{literal}}', agentPreset: preset } } } };
+      const original = { sections, contexts: [{ name: 'cwd', text: 'required runtime cwd', required: true }], tools: [], variables: { provider: 'fixture', model: 'fixture' } };
+      const before = structuredClone(original);
+      const rewrite = (assembly, ctx) => rewritePromptAssembly(assembly, { fallbackInject: 'Fixture instructions.', capabilityProtocol: false, context: ctx });
+      const prompt = { assemble: async () => original };
+      installAssembleGuard(prompt, rewrite);
+      const result = await prompt.assemble(context);
+      const suffix = result.sections.find(s => s.name === 'deployment:persona-suffix');
+      assert.equal(suffix.text, 'Your working directory is D:/fixture/{{literal}}.');
+      assert.equal(suffix.interpolate, false);
+      assert.deepEqual(result.variables, { provider: 'fixture', model: 'fixture' });
+      assert.deepEqual(result.contexts, original.contexts);
+      assert.deepEqual(original, before);
+      assert.deepEqual(rewrite(result, context), result);
+    }
+  }
+});
+
+test('missing session cwd emits no unresolved placeholder; custom suffixes stay intact', () => {
+  const original = { sections: [], contexts: [], tools: [], variables: { model: 'fixture', provider: 'fixture' } };
+  const result = rewritePromptAssembly(original, { fallbackInject: '', capabilityProtocol: false });
+  const suffix = result.sections.find(s => s.name === 'deployment:persona-suffix');
+  assert.equal(suffix.text, '');
+  assert.equal(suffix.interpolate, false);
+  const custom = { name: 'deployment:persona-suffix', text: 'Use concise answers with {{model}}.' };
+  const preserved = rewritePromptAssembly({ ...original, sections: [custom] }, { capabilityProtocol: false });
+  assert.deepEqual(preserved.sections.find(s => s.name === custom.name), custom);
+  const child = rewritePromptAssembly(original, { capabilityProtocol: false, context: { agent: { session: { header: { cwd: '/child' } } }, session: { header: { cwd: '/parent' } } } });
+  assert.equal(child.sections.find(s => s.name === suffix.name).text, 'Your working directory is /child.');
+});
 
 test.after(() => { fs.rmSync(temp, { recursive: true, force: true }); });
 const request = (extra = {}) => ({ method: 'POST', socket: { remoteAddress: '127.0.0.1' },

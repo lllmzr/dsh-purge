@@ -76,7 +76,8 @@ try {
   if (previousApp) { fs.renameSync(app, previousApp); oldMoved = true; }
   fs.renameSync(asar, originalAsar); archiveMoved = true;
   fs.renameSync(stage, app); activated = true;
-  const manifest = { install, home, version: '1.1.72', hostVersion: host.version, originalAsar,
+  const pluginVersion = JSON.parse(fs.readFileSync(path.join(root, 'package.json'))).version;
+  const manifest = { install, home, version: pluginVersion, hostVersion: host.version, originalAsar,
     originalSha256: sha, previousApp, applied: summary.applied, already: summary.already, targetFiles: targets.length };
   const file = path.join(backupDir, 'manifest.json'); fs.writeFileSync(file, JSON.stringify(manifest, null, 2) + '\n');
   console.log(JSON.stringify({ ok: true, ...manifest, restoreManifest: file, note: '宿主未启动，可正常打开桌面应用' }, null, 2));

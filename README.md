@@ -1,4 +1,4 @@
-# dsh-purge 1.1.72 — maintained by lllmzr
+# dsh-purge 1.1.73 — maintained by lllmzr
 
 An independently maintained fork of [YuJunZhiXue/dsh-purge 1.1.71](https://github.com/YuJunZhiXue/dsh-purge/tree/5e757260a0be055892b48ec520d451cc82e1c191). Original author: YuJunZhiXue. Original copyright: Copyright (c) 2026 小杨. The MIT license and bundled third-party notices are preserved.
 
@@ -8,6 +8,7 @@ This third-party plugin manages local DeepSeek Harness prompts, rules, patches a
 
 ## Changes
 
+- Fix message submission on 0.2.1: generated persona suffixes use the active session directory as literal text instead of the removed `cwd` prompt variable. Required runtime contexts remain intact.
 - Shared HTTP origin and JSON validation; rule mutations require POST.
 - Nested-profile uninstall and owned-default-preset cleanup.
 - Correct fd routing and concurrent atomic writes; hash/version-tracked backups preserve full restore after repeated Apply.
@@ -41,5 +42,7 @@ npm test
 ```
 
 Regression tests need only built-in Node modules and do not require model keys. Host verification scripts additionally require a workspace-local official runtime copy. Runtime copies, installation backups and machine-local reports are excluded from Git.
+
+`node scripts/verify-prompt.mjs --base <absolute-path-to-@deepseek-ai>` reproduces the old error and checks 24 cases / 48 renderings with the actual host renderer, without sending model requests.
 
 See [the historical baseline audit](audit/REVIEW-1.1.71.md) and [mirror provenance](MIRROR-NOTICE.md). This fork is not an official DeepSeek product.
